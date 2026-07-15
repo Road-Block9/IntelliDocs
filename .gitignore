@@ -1,0 +1,38 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Tests and tooling
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Runtime data
+*.db
+*.sqlite
+*.sqlite3
+logs/
+*.log
+ocr-temp/
+tmp/
+
+# Generated extraction artifacts (original PDFs under data/ are not ignored)
+data/extracted/
+data/processed/
+
+# IDE and operating system
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
