@@ -1,8 +1,8 @@
 # Tri9T AI CT-200 Backend
 
-Backend for the CardioTrack CT-200 manual engineering assignment. Module 0
-contains only the application scaffold, configuration, database foundation,
-health endpoint, and basic tests. PDF ingestion and all domain features are
+Backend for the CardioTrack CT-200 manual engineering assignment. The current
+implementation contains the application scaffold and layout-preserving raw PDF
+extraction. PDF interpretation, persistence, and all later domain features are
 intentionally deferred.
 
 ## Prerequisites
@@ -54,11 +54,40 @@ python -m pytest
 ```
 
 The tests verify the health endpoint and confirm optional MongoDB and LLM
-credentials are not required.
+credentials are not required. They also exercise raw extraction with synthetic
+PDFs and controlled error cases.
+
+## Extract raw PDF evidence
+
+The extractor records pages, text blocks, bounding boxes, reading order, font
+evidence, image counts, selectable-text status, and a conservative OCR-need
+signal. It does not classify headings or modify the source PDF.
+
+```powershell
+python -m scripts.extract_raw data/ct200_manual.pdf
+python -m scripts.extract_raw data/ct200_manual_v2.pdf
+```
+
+JSON is written beneath the ignored `generated-output/raw-extraction/`
+directory. To request optional OCR, use `--enable-ocr`. OCR is attempted only
+on pages that contain images and no selectable text:
+
+```powershell
+python -m scripts.extract_raw data/ct200_manual.pdf --enable-ocr
+```
+
+Tesseract is optional. If it is unavailable, the JSON and console output state
+that clearly while embedded-text extraction continues.
 
 ## Current limitations
 
-- No PDF extraction, OCR, hierarchy reconstruction, or ingestion exists yet.
+- OCR candidacy is a conservative generic heuristic: an image-bearing page
+  without selectable text. It can miss unusual scans and does not assess text
+  quality.
+- Font style indicators depend on PDF font flags and font names; mixed-style
+  blocks report an indeterminate block-level style while preserving span data.
+- Optional OCR requires a working Tesseract installation discoverable on PATH.
+- No heading detection, cleanup, hierarchy reconstruction, or ingestion exists.
 - No document, version, node, selection, or generation models exist yet.
 - MongoDB and LLM settings are placeholders and no clients are initialized.
 - Database migrations and production deployment configuration are not included.

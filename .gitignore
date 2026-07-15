@@ -28,6 +28,7 @@ ocr-temp/
 tmp/
 
 # Generated extraction artifacts (original PDFs under data/ are not ignored)
+generated-output/
 data/extracted/
 data/processed/
 
@@ -36,3 +37,7 @@ data/processed/
 .vscode/
 .DS_Store
 Thumbs.db
+
+
+.pytest_tmp/
+.pytest_cache/
